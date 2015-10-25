@@ -1,0 +1,24 @@
+{
+  "name": "siel",
+  "version": "0.0.1",
+  "authors": [
+    "lqip32@gmail.com"
+  ],
+  "description": "Simple ES6 Logger",
+  "main": "index.js",
+  "keywords": [
+    "es6-logger",
+    "logger"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "lodash": "~3.10.1"
+  }
+}

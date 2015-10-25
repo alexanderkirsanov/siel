@@ -1,0 +1,44 @@
+{
+  "name": "siel",
+  "version": "0.0.1",
+  "description": "Simple ES6 Loggger",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "test": "node ./node_modules/gulp-cli/bin/gulp test --single-run",
+    "lint": "node ./node_modules/gulp-cli/bin/gulp lint",
+    "docs": "node ./node_modules/gulp-cli/bin/gulp docs",
+    "build": "node ./node_modules/gulp-cli/bin/gulp build",
+    "postinstall": "node ./node_modules/bower/bin/bower install"
+  },
+  "keywords": [
+    "es6-logger",
+    "logger"
+  ],
+  "author": "lqip32@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "babel-core": "^5.8.25",
+    "bower": "^1.6.3",
+    "coveralls": "^2.11.4",
+    "es6-module-loader": "^0.17.3",
+    "gulp": "^3.9.0",
+    "gulp-cli": "^0.3.0",
+    "gulp-eslint": "^1.0.0",
+    "gulp-karma": "0.0.5",
+    "http-proxy": "^1.11.2",
+    "isparta": "^3.1.0",
+    "jasmine-core": "^2.3.4",
+    "karma": "^0.13.9",
+    "karma-coverage": "^0.5.1",
+    "karma-jasmine": "^0.3.5",
+    "karma-mocha-reporter": "^1.0.2",
+    "karma-phantomjs-launcher": "^0.1",
+    "karma-systemjs": "^0.8.0",
+    "lodash": "^3.10.1",
+    "phantomjs-polyfill": "^0.0.1",
+    "systemjs": "^0.19.5",
+    "systemjs-builder": "^0.14.9"
+  }
+}
