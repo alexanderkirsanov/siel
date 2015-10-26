@@ -3,28 +3,31 @@ import Levels from '../Levels.js';
 let Utils = {
     ROOT: 'root',
     DIVIDER: '.',
-    __parentNameCache: {},
+    parentNameCache: {},
 
-    getParentNames(name) {
-        if (!this.__parentNameCache[name]) {
-            let parents = [],
-                parts = name.split(this.DIVIDER);
+    resetParentNamesCache: function () {
+        this.parentNameCache = {};
+    },
+
+    getParentNames: function (name) {
+        if (!this.parentNameCache[name]) {
+            let parents = [];
+            let parts = name.split(this.DIVIDER);
             if (parts.length > 1) {
                 while (parts.length > 1) {
                     parts.pop();
                     parents.unshift(parts.join(this.DIVIDER));
                 }
                 parents.unshift(this.ROOT);
-                this.__parentNameCache[name] = parents;
-            }
-            else {
-                this.__parentNameCache[name] = [this.ROOT];
+                this.parentNameCache[name] = parents;
+            } else {
+                this.parentNameCache[name] = [this.ROOT];
             }
         }
-        return this.__parentNameCache[name];
+        return this.parentNameCache[name];
     },
 
-    makeRecord(name, level, message, args){
+    makeRecord: function (name, level, message, args) {
         return {
             name: name,
             level: Levels[level],

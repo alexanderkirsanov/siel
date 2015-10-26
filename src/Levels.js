@@ -1,15 +1,15 @@
-import _ from 'lodash';
+import _ from 'underscore';
 export default {
-    'NO': 0,
-    'VERBOSE': 100,
-    'DEBUG': 200,
-    'INFO': 300,
-    'WARNING': 400,
-    'ERROR': 500,
-    'FATAL': 600,
+    NO: 0,
+    VERBOSE: 100,
+    DEBUG: 200,
+    INFO: 300,
+    WARNING: 400,
+    ERROR: 500,
+    FATAL: 600,
 
     getLevel: function (value) {
-        value = _.isString(value) ? value.toUpperCase() : '';
-        return this[String(value)] || value
+        let aValue = _.isString(value) ? value.toUpperCase() : '';
+        return this[String(aValue)] || value;
     }
-}
+};
