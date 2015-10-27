@@ -1,5 +1,6 @@
 import Util from './utils/LoggerUtil.js';
 import Levels from './Levels.js';
+import Handlers from '.handlers/Handlers.js';
 class Logger {
     constructor(name) {
         if (!name) {
@@ -9,22 +10,27 @@ class Logger {
         this.handlers = {};
         this.level = null;
         this.propagate = true;
+        this.handlers = new Handlers();
     }
 
     getSuitableParent(name) {
         let parentNames;
-        let i;
         let parent;
         if (name === Util.ROOT) {
             return null;
         }
         parentNames = Util.getParentNames(name);
-        i = parentNames.length;
-        while (!parent && i > 0) {
-            i = i - 1;
-            parent = this.loggers[parentNames[i]];
+        for (let parentName of parentNames) {
+            parent = this.loggers[parentName];
+            if (parent) {
+                break;
+            }
         }
         return parent;
+    }
+
+    getHandlers() {
+        return this.handlers;
     }
 
     verbose(message) {
@@ -39,11 +45,9 @@ class Logger {
         return this.log(Levels.getName(Levels.Level.INFO), message, arguments);
     }
 
-
     warning(message) {
         return this.log(Levels.getName(Levels.Level.WARNING), message, arguments);
     }
-
 
     error(message) {
         return this.log(Levels.getName(Levels.Level.ERROR), message, arguments);
@@ -53,34 +57,11 @@ class Logger {
         return this.log(Levels.getName(Levels.Level.FATAL), message, arguments);
     }
 
-    addHandler(handler) {
-        this.handlers.push(handler);
-        return this;
-    }
-
-    removeHandler(handler) {
-        let index = this.handlers.indexOf(handler);
-        if (index !== -1) {
-            this.handlers.splice(index, 1);
-        }
-        return this;
-    }
-
-    getHandlers() {
-        return this.handlers;
-    }
-
     handle(record) {
         let promises = [];
         let result;
         if (this.filter(record)) {
-            let i = this.handlers.length;
-            while (i > 0) {
-                i = i - 1;
-                if (record.level >= this.handlers[i].level) {
-                    promises.push(this.handlers[i].handle(record));
-                }
-            }
+            promises = this.handlers.handle(record);
             if (this.isPropagate()) {
                 let parent = this.getSuitableParent(this.name);
                 if (parent) {

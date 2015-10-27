@@ -26,6 +26,7 @@ describe('LoggerUtil', function () {
         const levelName = 'INFO';
         const message = 'message';
         const args = ['test'];
+
         it('Should return message object', function () {
             let record = LoggerUtil.makeRecord(name, levelName, message, args);
             expect(record.level).toBe(Levels.getLevel(levelName));
@@ -34,6 +35,7 @@ describe('LoggerUtil', function () {
             expect(record.timestamp).toBeDefined();
             expect(record.args).toEqual(args);
         });
+
         it('Should set the current time as timestamp', function () {
             jasmine.clock().install();
             jasmine.clock().mockDate();
