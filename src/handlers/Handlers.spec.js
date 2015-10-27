@@ -5,33 +5,38 @@ describe('Handlers', function () {
         expect(Handlers).toBeDefined();
     });
     let handlers;
+    let handler;
     beforeEach(function () {
         handlers = new Handlers();
-        let handler = {
+        handler = {
             level: 200,
             handle: function () {
             }
         };
     });
-    describe('Handlers initialization', function () {
+    it('Should support handlers initialization', function () {
         handlers.addHandler(handler);
         expect(handlers.getHandlers().length).toBe(1);
     });
 
-    describe('Handlers removing', function () {
+    it('Should allow handlers removing', function () {
         handlers.addHandler(handler);
         handlers.removeHandler(handler);
-        expect(handlers.getHandlers().length).toBe(1);
+        expect(handlers.getHandlers().length).toBe(0);
     });
 
-    describe('Handlers record processing', function () {
+    it('Should process records correctly', function () {
         handlers.addHandler(handler);
         let handler2 = {
             level: 100,
             handle: function () {
             }
         };
-        //TODO
-        //spyOn()
+        handlers.addHandler(handler2);
+        spyOn(handler, 'handle');
+        spyOn(handler2, 'handle');
+        handlers.handle({level: 150, message: 'test'});
+        expect(handler2.handle).toHaveBeenCalled();
+        expect(handler.handle).not.toHaveBeenCalled();
     });
 });

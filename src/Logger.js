@@ -1,6 +1,6 @@
 import Util from './utils/LoggerUtil.js';
 import Levels from './Levels.js';
-import Handlers from '.handlers/Handlers.js';
+import Handlers from './handlers/Handlers.js';
 class Logger {
     constructor(name) {
         if (!name) {

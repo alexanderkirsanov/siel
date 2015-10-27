@@ -21,12 +21,9 @@ class Handlers {
     }
 
     handle(record) {
-        let promises = this.handlers.filter(function (handler) {
-            return record.level >= handler.level;
-        }).reverse().map(function (handler) {
-            return handler.handle(record);
-        });
+        let promises = this.handlers.filter(handler => record.level >= handler.level).reverse().map(handler =>
+            handler.handle(record));
         return promises;
     }
 }
-export default Logger;
+export default Handlers;

@@ -18,9 +18,9 @@ export default {
     getName: function (level) {
         if (!this.tmpLevels) {
             this.tmpLevels = {};
-            _.forEach(this.Level, function (value, key) {
+            _.forEach(this.Level, (value, key) => {
                 this.tmpLevels[value] = key;
-            }, this);
+            });
         }
         return this.tmpLevels[level];
     }

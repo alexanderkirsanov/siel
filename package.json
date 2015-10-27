@@ -5,7 +5,7 @@
   "main": "main.js",
   "private": true,
   "scripts": {
-    "test": "node ./node_modules/gulp-cli/bin/gulp test --single-run",
+    "test": "node ./node_modules/gulp-cli/bin/gulp test",
     "lint": "node ./node_modules/gulp-cli/bin/gulp lint",
     "docs": "node ./node_modules/gulp-cli/bin/gulp docs",
     "build": "node ./node_modules/gulp-cli/bin/gulp build",
