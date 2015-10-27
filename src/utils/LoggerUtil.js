@@ -30,7 +30,7 @@ let Utils = {
     makeRecord: function (name, level, message, args) {
         return {
             name: name,
-            level: Levels[level],
+            level: Levels.Level[level],
             levelName: level,
             timestamp: new Date(),
             message: message,
