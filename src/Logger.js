@@ -2,10 +2,22 @@ import Util from './utils/LoggerUtil.js';
 import Levels from './Levels.js';
 import Handlers from './handlers/Handlers.js';
 class Logger {
-    constructor(name) {
-        if (!name) {
-            this.name = Util.ROOT;
+    static createLogger(name = Util.ROOT) {
+        let logger;
+        if (!Logger.loggers) {
+            Logger.loggers = {};
         }
+        if (name in Logger.loggers) {
+            logger = Logger.loggers[name];
+        } else {
+            logger = new Logger(name);
+            Logger.loggers[name] = logger;
+        }
+        return logger;
+    }
+
+    constructor(name = Util.ROOT) {
+        this.name = name;
         this.loggers = {};
         this.handlers = {};
         this.level = null;
@@ -21,7 +33,7 @@ class Logger {
         }
         parentNames = Util.getParentNames(name);
         for (let parentName of parentNames) {
-            parent = this.loggers[parentName];
+            parent = Logger.loggers[parentName];
             if (parent) {
                 break;
             }
