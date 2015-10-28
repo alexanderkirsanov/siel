@@ -15,6 +15,9 @@ class Logger {
         }
         return logger;
     }
+    static clearCaches() {
+        Logger.logger = null
+    }
 
     constructor(name = Util.ROOT) {
         this.name = name;
@@ -25,13 +28,17 @@ class Logger {
         this.handlers = new Handlers();
     }
 
+    getName(){
+        return this.name;
+    }
+
     getSuitableParent(name) {
         let parentNames;
         let parent;
         if (name === Util.ROOT) {
             return null;
         }
-        parentNames = Util.getParentNames(name);
+        parentNames = Util.getParentNames(name).reverse();
         for (let parentName of parentNames) {
             parent = Logger.loggers[parentName];
             if (parent) {
