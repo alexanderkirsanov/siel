@@ -1,47 +1,47 @@
 import LoggerUtil from './LoggerUtil.js';
 import Levels from '../Levels.js';
 
-describe('LoggerUtil', function () {
-    it('Should be defined', function () {
+describe('LoggerUtil', () => {
+    it('Should be defined', () => {
         expect(LoggerUtil).toBeDefined();
     });
-    describe('getParentNames verification', function () {
-        beforeEach(function () {
+    describe('getParentNames verification', () => {
+        beforeEach(() => {
             LoggerUtil.resetParentNamesCache();
         });
-        it('Should return root parent in case of non found', function () {
+        it('Should return root parent in case of non found', () => {
             expect(LoggerUtil.getParentNames('siel')).toEqual(['root']);
         });
-        it('Should return array starts from parent to children starting from root for complex names', function () {
+        it('Should return array starts from parent to children starting from root for complex names', () => {
             expect(LoggerUtil.getParentNames('siel.utils.Logger')).toEqual(['root', 'siel', 'siel.utils']);
         });
-        it('Should take the parent names from cache', function () {
+        it('Should take the parent names from cache', () => {
             const a = LoggerUtil.getParentNames('siel.utils.Logger');
             const b = LoggerUtil.getParentNames('siel.utils.Logger');
             expect(a === b).toBeTruthy();
         });
     });
-    describe('Record creation verification', function () {
-        const name = 'name';
+    describe('Record creation verification', () => {
+        const aName = 'name';
         const levelName = 'INFO';
-        const message = 'message';
-        const args = ['test'];
+        const aMessage = 'message';
+        const anArgs = ['test'];
 
-        it('Should return message object', function () {
-            let record = LoggerUtil.makeRecord(name, levelName, message, args);
-            expect(record.level).toBe(Levels.getLevel(levelName));
-            expect(record.name).toBe(name);
-            expect(record.message).toBe(message);
-            expect(record.timestamp).toBeDefined();
-            expect(record.args).toEqual(args);
+        it('Should return message object', () => {
+            let {name, level, message, timestamp, args} = LoggerUtil.makeRecord(aName, levelName, aMessage, anArgs);
+            expect(level).toBe(Levels.getLevel(levelName));
+            expect(name).toBe(aName);
+            expect(message).toBe(aMessage);
+            expect(timestamp).toBeDefined();
+            expect(args).toEqual(args);
         });
 
-        it('Should set the current time as timestamp', function () {
+        it('Should set the current time as timestamp', () => {
             jasmine.clock().install();
             jasmine.clock().mockDate();
-            let record = LoggerUtil.makeRecord(name, levelName, message, args);
+            let record = LoggerUtil.makeRecord(aName, levelName, aMessage, anArgs);
             jasmine.clock().tick(5000);
-            let record2 = LoggerUtil.makeRecord(name, levelName, message, args);
+            let record2 = LoggerUtil.makeRecord(aName, levelName, aMessage, anArgs);
             jasmine.clock().uninstall();
             expect(record.timestamp).toBeLessThan(record2.timestamp);
         });

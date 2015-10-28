@@ -1,35 +1,35 @@
 import Handlers from './Handlers.js';
 
-describe('Handlers', function () {
-    it('Should be defined', function () {
+describe('Handlers', () => {
+    it('Should be defined', () => {
         expect(Handlers).toBeDefined();
     });
     let handlers;
     let handler;
-    beforeEach(function () {
+    beforeEach(() => {
         handlers = new Handlers();
         handler = {
             level: 200,
-            handle: function () {
+            handle: () => {
             }
         };
     });
-    it('Should support handlers initialization', function () {
+    it('Should support handlers initialization', () => {
         handlers.addHandler(handler);
         expect(handlers.getHandlers().length).toBe(1);
     });
 
-    it('Should allow handlers removing', function () {
+    it('Should allow handlers removing', () => {
         handlers.addHandler(handler);
         handlers.removeHandler(handler);
         expect(handlers.getHandlers().length).toBe(0);
     });
 
-    it('Should process records correctly', function () {
+    it('Should process records correctly', () => {
         handlers.addHandler(handler);
         let handler2 = {
             level: 100,
-            handle: function () {
+            handle: () => {
             }
         };
         handlers.addHandler(handler2);
