@@ -179,7 +179,7 @@ describe('Logger', () => {
             expect(logger.isPropagate()).toBeTruthy();
         });
     });
-    describe('itnernal log verification', () => {
+    describe('internal log verification', () => {
         it('Should invoke handle method which returns promise if it\'s enabled for this level', () => {
             let logger = Logger.createLogger();
             spyOn(logger, 'isEnabledFor').and.returnValue(true);
@@ -197,5 +197,8 @@ describe('Logger', () => {
                 done();
             });
         });
+    });
+    describe('handle record verification', () => {
+
     });
 });

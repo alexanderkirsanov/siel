@@ -93,7 +93,7 @@ class Logger {
         } else if (promises[0]) {
             result = promises[0];
         } else {
-            result = Promise.fulfilled();
+            result = Promise.resolve();
         }
         return result;
     }
