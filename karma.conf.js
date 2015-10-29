@@ -10,6 +10,7 @@ module.exports = function (config) {
         frameworks: ['systemjs', 'jasmine-ajax', 'jasmine'],
 
         files: [
+            'node_modules/babel-core/browser-polyfill.js',
             'src/**/*.spec.js',
             'src/*.spec.js'
         ],
