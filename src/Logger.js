@@ -15,20 +15,20 @@ class Logger {
         }
         return logger;
     }
+
     static clearCaches() {
-        Logger.logger = null
+        Logger.logger = null;
     }
 
     constructor(name = Util.ROOT) {
         this.name = name;
         this.loggers = {};
-        this.handlers = {};
         this.level = null;
         this.propagate = true;
         this.handlers = new Handlers();
     }
 
-    getName(){
+    getName() {
         return this.name;
     }
 
@@ -53,27 +53,27 @@ class Logger {
     }
 
     verbose(message) {
-        return this.log(Levels.getName(Levels.Level.VERBOSE), message, arguments);
+        return this.log(Levels.getName(Levels.Level.VERBOSE), message);
     }
 
     debug(message) {
-        return this.log(Levels.getName(Levels.Level.DEBUG), message, arguments);
+        return this.log(Levels.getName(Levels.Level.DEBUG), message);
     }
 
     info(message) {
-        return this.log(Levels.getName(Levels.Level.INFO), message, arguments);
+        return this.log(Levels.getName(Levels.Level.INFO), message);
     }
 
     warning(message) {
-        return this.log(Levels.getName(Levels.Level.WARNING), message, arguments);
+        return this.log(Levels.getName(Levels.Level.WARNING), message);
     }
 
     error(message) {
-        return this.log(Levels.getName(Levels.Level.ERROR), message, arguments);
+        return this.log(Levels.getName(Levels.Level.ERROR), message);
     }
 
     fatal(message) {
-        return this.log(Levels.getName(Levels.Level.FATAL), message, arguments);
+        return this.log(Levels.getName(Levels.Level.FATAL), message);
     }
 
     handle(record) {
@@ -151,7 +151,7 @@ class Logger {
         if (this.isEnabledFor(Levels[level])) {
             promise = this.handle(Util.makeRecord(this.name, level, msg, args));
         } else {
-            promise = Promise.fulfilled();
+            promise = Promise.resolve();
         }
         return promise;
     }
