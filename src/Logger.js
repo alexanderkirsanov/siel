@@ -1,6 +1,7 @@
 import Util from './utils/LoggerUtil.js';
 import Levels from './Levels.js';
 import Handlers from './handlers/Handlers.js';
+import Filters from './filters/Filters.js';
 class Logger {
     static createLogger(name = Util.ROOT) {
         let logger;
@@ -26,6 +27,7 @@ class Logger {
         this.level = null;
         this.propagate = true;
         this.handlers = new Handlers();
+        this.filters = new Filters();
     }
 
     getName() {
@@ -50,6 +52,10 @@ class Logger {
 
     getHandlers() {
         return this.handlers;
+    }
+
+    getFilters() {
+        return this.filters;
     }
 
     verbose(message) {
@@ -79,7 +85,7 @@ class Logger {
     handle(record) {
         let promises = [];
         let result;
-        if (this.filter(record)) {
+        if (this.filters.filter(record)) {
             promises = this.handlers.handle(record);
             if (this.isPropagate()) {
                 let parent = this.getSuitableParent(this.name);

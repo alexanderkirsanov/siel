@@ -2,6 +2,7 @@ import Logger from './Logger.js';
 import Levels from './Levels.js';
 import Util from './utils/LoggerUtil.js';
 import Handlers from './handlers/Handlers.js';
+import Filters from './filters/Filters.js';
 
 describe('Logger', () => {
     it('Should be defined', () => {
@@ -54,6 +55,13 @@ describe('Logger', () => {
             let handlers = Logger.createLogger().getHandlers();
             expect(handlers).toBeDefined();
             expect(handlers).toEqual(jasmine.any(Handlers));
+        });
+    });
+    describe('getFilters verification', () => {
+        it('Should return the filters', () => {
+            let filters = Logger.createLogger().getFilters();
+            expect(filters).toBeDefined();
+            expect(filters).toEqual(jasmine.any(Filters));
         });
     });
     describe('logger methods verification', () => {
