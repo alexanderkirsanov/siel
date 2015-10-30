@@ -9,16 +9,16 @@ class Filters {
         });
     }
 
-    addFilter(filter) {
+    add(filter) {
         this.filters.push(filter);
         return this;
     }
 
-    getFilters() {
+    getAll() {
         return this.filters;
     }
 
-    removeFilter(filter) {
+    remove(filter) {
         let index = this.filters.indexOf(filter);
         if (index !== -1) {
             this.filters.splice(index, 1);

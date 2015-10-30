@@ -15,24 +15,24 @@ describe('Handlers', () => {
         };
     });
     it('Should support handlers initialization', () => {
-        handlers.addHandler(handler);
-        expect(handlers.getHandlers().length).toBe(1);
+        handlers.add(handler);
+        expect(handlers.getAll().length).toBe(1);
     });
 
     it('Should allow handlers removing', () => {
-        handlers.addHandler(handler);
-        handlers.removeHandler(handler);
-        expect(handlers.getHandlers().length).toBe(0);
+        handlers.add(handler);
+        handlers.remove(handler);
+        expect(handlers.getAll().length).toBe(0);
     });
 
     it('Should process records correctly', () => {
-        handlers.addHandler(handler);
+        handlers.add(handler);
         let handler2 = {
             level: 100,
             handle: () => {
             }
         };
-        handlers.addHandler(handler2);
+        handlers.add(handler2);
         spyOn(handler, 'handle');
         spyOn(handler2, 'handle');
         handlers.handle({level: 150, message: 'test'});

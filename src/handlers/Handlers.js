@@ -3,12 +3,12 @@ class Handlers {
         this.handlers = [];
     }
 
-    addHandler(handler) {
+    add(handler) {
         this.handlers.push(handler);
         return this;
     }
 
-    removeHandler(handler) {
+    remove(handler) {
         let index = this.handlers.indexOf(handler);
         if (index !== -1) {
             this.handlers.splice(index, 1);
@@ -16,7 +16,7 @@ class Handlers {
         return this;
     }
 
-    getHandlers() {
+    getAll() {
         return this.handlers;
     }
 
