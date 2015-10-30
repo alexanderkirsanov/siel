@@ -24,6 +24,14 @@ describe('Handlers', () => {
         handlers.remove(handler);
         expect(handlers.getAll().length).toBe(0);
     });
+    it('Shouldn\'t remove non existing handler', () => {
+        let tmpHandler = () => {
+        };
+        handlers.add(handler);
+        expect(handlers.getAll().length).toBe(1);
+        handlers.remove(tmpHandler);
+        expect(handlers.getAll().length).toBe(1);
+    });
 
     it('Should process records correctly', () => {
         handlers.add(handler);

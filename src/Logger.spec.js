@@ -215,7 +215,7 @@ describe('Logger', () => {
             });
             logger.handle().then(()=> {
                 done();
-            })
+            });
         });
         it('Should invoke handlers handle method', (done) => {
             Logger.clearCaches();
@@ -225,9 +225,9 @@ describe('Logger', () => {
             });
             let handler = {
                 level: 100,
-                handle(record){
+                handle() {
                 }
-            }
+            };
             spyOn(handler, 'handle').and.returnValue(new Promise((resolve) => {
                 resolve('test');
             }));
@@ -236,7 +236,7 @@ describe('Logger', () => {
                 expect(handler.handle).toHaveBeenCalled();
                 expect(result).toBe('test');
                 done();
-            })
+            });
         });
         it('Should invoke parents logger handle method', (done) => {
             Logger.clearCaches();
@@ -246,9 +246,9 @@ describe('Logger', () => {
             });
             let parentHandler = {
                 level: 100,
-                handle(record){
+                handle() {
                 }
-            }
+            };
             spyOn(parentHandler, 'handle').and.returnValue(new Promise((resolve) => {
                 resolve('parent');
             }));
@@ -260,9 +260,9 @@ describe('Logger', () => {
             });
             let childHandler = {
                 level: 100,
-                handle(record){
+                handle() {
                 }
-            }
+            };
 
             spyOn(childHandler, 'handle').and.returnValue(new Promise((resolve) => {
                 resolve('child');
@@ -274,7 +274,45 @@ describe('Logger', () => {
                 expect(parentHandler.handle).toHaveBeenCalled();
                 expect(result).toEqual(['child', 'parent']);
                 done();
-            })
+            });
+        });
+        it('Shouldn\'t invoke parents logger handle method if propagate false', (done) => {
+            Logger.clearCaches();
+            let parentLogger = Logger.createLogger('parent');
+            parentLogger.getFilters().add(()=> {
+                return true;
+            });
+            let parentHandler = {
+                level: 100,
+                handle() {
+                }
+            };
+            spyOn(parentHandler, 'handle').and.returnValue(new Promise((resolve) => {
+                resolve('parent');
+            }));
+            parentLogger.getHandlers().add(parentHandler);
+
+            let logger = Logger.createLogger('parent.child');
+            logger.setPropagate(false);
+            logger.getFilters().add(()=> {
+                return true;
+            });
+            let childHandler = {
+                level: 100,
+                handle() {
+                }
+            };
+            spyOn(childHandler, 'handle').and.returnValue(new Promise((resolve) => {
+                resolve('child');
+            }));
+            logger.getHandlers().add(childHandler);
+
+            logger.handle({level: 100}).then((result)=> {
+                expect(childHandler.handle).toHaveBeenCalled();
+                expect(parentHandler.handle).not.toHaveBeenCalled();
+                expect(result).toEqual('child');
+                done();
+            });
         });
     });
 });
