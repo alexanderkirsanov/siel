@@ -18,7 +18,7 @@ class Logger {
     }
 
     static clearCaches() {
-        Logger.logger = null;
+        Logger.loggers = null;
     }
 
     constructor(name = Util.ROOT) {
@@ -94,7 +94,7 @@ class Logger {
                 }
             }
         }
-        if (promises.length > 2) {
+        if (promises.length >= 2) {
             result = Promise.all(promises);
         } else if (promises[0]) {
             result = promises[0];

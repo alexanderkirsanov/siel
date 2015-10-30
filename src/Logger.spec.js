@@ -207,6 +207,74 @@ describe('Logger', () => {
         });
     });
     describe('handle record verification', () => {
+        it('Should return resolved promise if record is not handled', (done) => {
+            Logger.clearCaches();
+            let logger = Logger.createLogger();
+            logger.getFilters().add(()=> {
+                return false;
+            });
+            logger.handle().then(()=> {
+                done();
+            })
+        });
+        it('Should invoke handlers handle method', (done) => {
+            Logger.clearCaches();
+            let logger = Logger.createLogger();
+            logger.getFilters().add(()=> {
+                return true;
+            });
+            let handler = {
+                level: 100,
+                handle(record){
+                }
+            }
+            spyOn(handler, 'handle').and.returnValue(new Promise((resolve) => {
+                resolve('test');
+            }));
+            logger.getHandlers().add(handler);
+            logger.handle({level: 100}).then((result)=> {
+                expect(handler.handle).toHaveBeenCalled();
+                expect(result).toBe('test');
+                done();
+            })
+        });
+        it('Should invoke parents logger handle method', (done) => {
+            Logger.clearCaches();
+            let parentLogger = Logger.createLogger('parent');
+            parentLogger.getFilters().add(()=> {
+                return true;
+            });
+            let parentHandler = {
+                level: 100,
+                handle(record){
+                }
+            }
+            spyOn(parentHandler, 'handle').and.returnValue(new Promise((resolve) => {
+                resolve('parent');
+            }));
+            parentLogger.getHandlers().add(parentHandler);
 
+            let logger = Logger.createLogger('parent.child');
+            logger.getFilters().add(()=> {
+                return true;
+            });
+            let childHandler = {
+                level: 100,
+                handle(record){
+                }
+            }
+
+            spyOn(childHandler, 'handle').and.returnValue(new Promise((resolve) => {
+                resolve('child');
+            }));
+            logger.getHandlers().add(childHandler);
+
+            logger.handle({level: 100}).then((result)=> {
+                expect(childHandler.handle).toHaveBeenCalled();
+                expect(parentHandler.handle).toHaveBeenCalled();
+                expect(result).toEqual(['child', 'parent']);
+                done();
+            })
+        });
     });
 });
