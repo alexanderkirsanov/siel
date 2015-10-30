@@ -8,7 +8,7 @@ describe('Filters', () => {
     beforeEach(() => {
         filters = new Filters();
     });
-    describe('Add filter verification', function () {
+    describe('Add filter verification', () => {
         it('Should save all filters in store', () => {
             let fn = ()=> {
             };
@@ -17,7 +17,7 @@ describe('Filters', () => {
             expect(filters.getAll().length).toBe(2);
         });
     });
-    describe('Remove filter verification', function () {
+    describe('Remove filter verification', () => {
         it('Should remove filter from store', () => {
             let fn = ()=> {
             };
@@ -38,7 +38,7 @@ describe('Filters', () => {
         });
     });
 
-    describe('Filter verification', function () {
+    describe('Filter verification', () => {
         let trueFn = ()=> {
             return true;
         };
