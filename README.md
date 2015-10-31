@@ -5,4 +5,3 @@ The siel can be installed using
 ```
 $ npm install --save seal
 ##Documentation
-TBD
