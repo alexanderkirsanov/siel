@@ -37,7 +37,6 @@
     "karma-mocha-reporter": "^1.0.2",
     "karma-phantomjs-launcher": "^0.1",
     "karma-systemjs": "^0.8.0",
-    "lodash": "^3.10.1",
     "phantomjs-polyfill": "^0.0.1",
     "systemjs": "^0.19.5",
     "systemjs-builder": "^0.14.9"

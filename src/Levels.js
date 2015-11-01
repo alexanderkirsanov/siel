@@ -1,4 +1,5 @@
-import _ from 'underscore';
+import Utils from './utils/LoggerUtil.js';
+
 export default {
     Level: {
         NO: 0,
@@ -11,16 +12,16 @@ export default {
     },
 
     getLevel: function (value) {
-        let aValue = _.isString(value) ? value.toUpperCase() : '';
+        let aValue = (typeof value === 'string' || value instanceof String) ? value.toUpperCase() : '';
         return this.Level[String(aValue)] || value;
     },
 
     getName: function (level) {
         if (!this.tmpLevels) {
             this.tmpLevels = {};
-            _.forEach(this.Level, (value, key) => {
-                this.tmpLevels[value] = key;
-            });
+            for (let key of Object.keys(this.Level)) {
+                this.tmpLevels[this.Level[key]] = key;
+            }
         }
         return this.tmpLevels[level];
     }
