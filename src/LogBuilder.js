@@ -6,6 +6,8 @@ class LogBuilder {
             this.processOption(formatters, this.configureFormatter, options);
             this.processOption(filters, this.configureFilter, options);
             this.processOption(loggers, this.configureLoggers, options);
+        }else {
+            throw new Error('Logger options should be defined');
         }
     }
 
