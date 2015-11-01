@@ -1,11 +1,5 @@
 class LogBuilder {
-    /**
-     * @typedef Option
-     * @field formatters {Object}
-     * @field filters {Object}
-     * @field logger {Object]
-     * @param options {Option}
-     */
+
     config(options) {
         if (options) {
             let {formatters, filters, loggers} = options;

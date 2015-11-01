@@ -1,5 +1,3 @@
-import Utils from './utils/LoggerUtil.js';
-
 export default {
     Level: {
         NO: 0,
