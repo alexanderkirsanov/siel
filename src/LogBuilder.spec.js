@@ -71,12 +71,11 @@ describe('LogBuilder', () => {
             logBuilder.processOption(options.filter1, () => {
                 return new Promise((resolve) => {
                     resolve({conf: 2});
-                })
+                });
             }, testConfig).then(()=> {
-                    expect(options.filter1).toEqual({conf: 2});
-                    done();
-                }
-            );
+                expect(options.filter1).toEqual({conf: 2});
+                done();
+            });
         });
     });
 });

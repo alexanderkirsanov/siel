@@ -14,15 +14,14 @@ class LogBuilder {
     processOption(optionConfig = {}, func, baseOptions) {
         let keys = Object.keys(optionConfig);
         let promises = keys.map((key) => {
-            return func(optionConfig[key], baseOptions)
+            return func(optionConfig[key], baseOptions);
         });
         return Promise.all(promises).then((result)=> {
             result.forEach((item) => {
-                Object.keys(item).forEach((key)=>
-                {
+                Object.keys(item).forEach((key)=> {
                     optionConfig[key] = item[key];
                 });
-            })
+            });
         });
     }
 
@@ -30,7 +29,7 @@ class LogBuilder {
 
     }
 
-    configureFilter(filterOptions, baseOptions) {
+    configureFilter() {
 
     }
 
