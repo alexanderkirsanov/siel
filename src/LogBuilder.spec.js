@@ -57,19 +57,26 @@ describe('LogBuilder', () => {
             let options = {
                 filter1: {conf: '1'}
             };
-            spyOn(tst, 'test').and.returnValue({conf: '1'});
+            spyOn(tst, 'test').and.returnValue(new Promise((resolve) => {
+                resolve({conf: '1'});
+            }));
             logBuilder.processOption(options, tst.test, testConfig);
             expect(tst.test.calls.mostRecent().args[0]).toEqual(options.filter1);
             expect(tst.test.calls.mostRecent().args[1]).toEqual(testConfig);
         });
-        it('Should change the original value by function result', () => {
+        it('Should change the original value by function result', (done) => {
             let options = {
                 filter1: {conf: '1'}
             };
-            logBuilder.processOption(options, () => {
-                return {conf: 2};
-            }, testConfig);
-            expect(options.filter1).toEqual({conf: 2});
+            logBuilder.processOption(options.filter1, () => {
+                return new Promise((resolve) => {
+                    resolve({conf: 2});
+                })
+            }, testConfig).then(()=> {
+                    expect(options.filter1).toEqual({conf: 2});
+                    done();
+                }
+            );
         });
     });
 });

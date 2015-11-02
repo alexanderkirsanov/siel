@@ -6,22 +6,31 @@ class LogBuilder {
             this.processOption(formatters, this.configureFormatter, options);
             this.processOption(filters, this.configureFilter, options);
             this.processOption(loggers, this.configureLoggers, options);
-        }else {
+        } else {
             throw new Error('Logger options should be defined');
         }
     }
 
     processOption(optionConfig = {}, func, baseOptions) {
-        for (let key of Object.keys(optionConfig)) {
-            optionConfig[key] = func(optionConfig[key], baseOptions);
-        }
+        let keys = Object.keys(optionConfig);
+        let promises = keys.map((key) => {
+            return func(optionConfig[key], baseOptions)
+        });
+        return Promise.all(promises).then((result)=> {
+            result.forEach((item) => {
+                Object.keys(item).forEach((key)=>
+                {
+                    optionConfig[key] = item[key];
+                });
+            })
+        });
     }
 
     configureLoggers() {
 
     }
 
-    configureFilter() {
+    configureFilter(filterOptions, baseOptions) {
 
     }
 
