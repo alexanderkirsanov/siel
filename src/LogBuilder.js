@@ -1,11 +1,12 @@
+import Logger from './Logger.js';
 class LogBuilder {
 
     config(options) {
         let result = [];
         if (options) {
             let {formatters, filters, loggers} = options;
-            result.push(this.processOption(formatters, this.configureFormatter, options));
-            result.push(this.processOption(filters, this.configureFilter, options));
+            result.push(this.processOption(formatters, this.configureFormatters, options));
+            result.push(this.processOption(filters, this.configureFilters, options));
             result.push(this.processOption(loggers, this.configureLoggers, options));
         } else {
             throw new Error('Logger options should be defined');
@@ -16,7 +17,7 @@ class LogBuilder {
     processOption(optionConfig = {}, func, baseOptions) {
         let keys = Object.keys(optionConfig);
         let promises = keys.map((key) => {
-            return func(optionConfig[key], baseOptions);
+            return func.call(this, optionConfig[key], baseOptions);
         });
         return Promise.all(promises).then((result)=> {
             result.forEach((item) => {
@@ -27,15 +28,46 @@ class LogBuilder {
         });
     }
 
-    configureLoggers() {
+    configureLoggers(loggers, options) {
+        for (let logger of loggers) {
+            this.configureLogger(logger, loggers, options);
+        }
+    }
+
+    configureFilters() {
 
     }
 
-    configureFilter() {
+    configureFormatters() {
 
     }
 
-    configureFormatter() {
+    configureLogger(name, loggerOptions, options) {
+        let logger = Logger.createLogger(name);
+        if (loggerOptions.level !== null) {
+            logger.setLevel(loggerOptions.level);
+        }
+
+        if (loggerOptions.handlers) {
+            loggerOptions.handlers.forEach((handlerName) => {
+                logger.getHandlers().add(this.initHandler(handlerName, options));
+            });
+        }
+        if (loggerOptions.filters) {
+            loggerOptions.filters.forEach((filter) => {
+                if (!options[filter]) {
+                    throw new Error('There is no filter with name: ' + filter);
+                }
+                logger.getFilters().add(options.filters[filter]);
+            });
+        }
+
+        if (loggerOptions.propagate !== null) {
+            logger.propagate = loggerOptions.propagate;
+        }
+    }
+
+    initHandler(name, options) {
 
     }
 }
