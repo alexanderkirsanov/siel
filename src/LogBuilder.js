@@ -29,6 +29,7 @@ class LogBuilder {
     }
 
     configureLoggers(loggers, options) {
+
         for (let logger of loggers) {
             this.configureLogger(logger, loggers, options);
         }
@@ -68,6 +69,18 @@ class LogBuilder {
     }
 
     initHandler(name, options) {
+        let handler = options.handlers[name];
+        if(!handler)
+        {
+            throw new Error('There is no handler with name: ' + name);
+        }
+        if (typeof handler.handle !== 'function') {
+            handler = options.handlers[name] = this.configureHandler(handler, options);
+        }
+        return handler;
+    }
+
+    configureHandler(handler, options) {
 
     }
 }
