@@ -44,28 +44,32 @@ class LogBuilder {
     }
 
     configureLogger(name, loggerOptions, options) {
+
         let logger = Logger.createLogger(name);
         if (loggerOptions.level !== null) {
             logger.setLevel(loggerOptions.level);
         }
+        const that = this;
+        let result = new Promise(function (resolve, reject) {
+            if (loggerOptions.handlers) {
+                logger.getHandlers().add();
+                Promise.all(loggerOptions.handlers.map((handlerName) => {
+                    return that.initHandler(handlerName, options));
+                })).then();
+            }
+            if (loggerOptions.filters) {
+                loggerOptions.filters.forEach((filter) => {
+                    if (!options[filter]) {
+                        throw new Error('There is no filter with name: ' + filter);
+                    }
+                    logger.getFilters().add(options.filters[filter]);
+                });
+            }
 
-        if (loggerOptions.handlers) {
-            loggerOptions.handlers.forEach((handlerName) => {
-                logger.getHandlers().add(this.initHandler(handlerName, options));
-            });
-        }
-        if (loggerOptions.filters) {
-            loggerOptions.filters.forEach((filter) => {
-                if (!options[filter]) {
-                    throw new Error('There is no filter with name: ' + filter);
-                }
-                logger.getFilters().add(options.filters[filter]);
-            });
-        }
-
-        if (loggerOptions.propagate !== null) {
-            logger.propagate = loggerOptions.propagate;
-        }
+            if (loggerOptions.propagate !== null) {
+                logger.propagate = loggerOptions.propagate;
+            }
+        });
     }
 
     initHandler(name, options) {
