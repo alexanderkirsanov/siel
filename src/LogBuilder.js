@@ -55,7 +55,7 @@ class LogBuilder {
                 logger.getHandlers().add();
                 Promise.all(loggerOptions.handlers.map((handlerName) => {
                     return that.initHandler(handlerName, options));
-                })).then();
+                }));
             }
             if (loggerOptions.filters) {
                 loggerOptions.filters.forEach((filter) => {
