@@ -54,7 +54,7 @@ class LogBuilder {
             if (loggerOptions.handlers) {
                 logger.getHandlers().add();
                 Promise.all(loggerOptions.handlers.map((handlerName) => {
-                    return that.initHandler(handlerName, options));
+                    return that.initHandler(handlerName, options);
                 }));
             }
             if (loggerOptions.filters) {
@@ -74,8 +74,7 @@ class LogBuilder {
 
     initHandler(name, options) {
         let handler = options.handlers[name];
-        if(!handler)
-        {
+        if (!handler) {
             throw new Error('There is no handler with name: ' + name);
         }
         if (typeof handler.handle !== 'function') {
