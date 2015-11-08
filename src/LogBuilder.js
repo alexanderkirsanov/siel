@@ -29,7 +29,6 @@ class LogBuilder {
     }
 
     configureLoggers(loggers, options) {
-
         for (let logger of loggers) {
             this.configureLogger(logger, loggers, options);
         }
@@ -44,32 +43,41 @@ class LogBuilder {
     }
 
     configureLogger(name, loggerOptions, options) {
-
         let logger = Logger.createLogger(name);
         if (loggerOptions.level !== null) {
             logger.setLevel(loggerOptions.level);
         }
-        const that = this;
-        let result = new Promise(function (resolve, reject) {
+        const self = this;
+        let result = new Promise((resolve, reject) => {
+            let promises = [];
             if (loggerOptions.handlers) {
                 logger.getHandlers().add();
-                Promise.all(loggerOptions.handlers.map((handlerName) => {
-                    return that.initHandler(handlerName, options);
-                }));
+                promises.push.apply(promises, Promise.all(loggerOptions.handlers.map((handlerName) => {
+                    return self.initHandler(handlerName, options);
+                })));
             }
-            if (loggerOptions.filters) {
-                loggerOptions.filters.forEach((filter) => {
-                    if (!options[filter]) {
-                        throw new Error('There is no filter with name: ' + filter);
-                    }
-                    logger.getFilters().add(options.filters[filter]);
-                });
-            }
+            promises.push(new Promise((resolveInner) => {
+                if (loggerOptions.filters) {
+                    loggerOptions.filters.forEach((filter) => {
+                        if (!options[filter]) {
+                            throw new Error('There is no filter with name: ' + filter);
+                        }
+                        logger.getFilters().add(options.filters[filter]);
+                    });
+                }
 
-            if (loggerOptions.propagate !== null) {
-                logger.propagate = loggerOptions.propagate;
-            }
+                if (loggerOptions.propagate !== null) {
+                    logger.propagate = loggerOptions.propagate;
+                }
+                resolveInner();
+            }));
+            Promise.all(promises).then(()=> {
+                resolve();
+            }).catch((err)=> {
+                reject(err);
+            });
         });
+        return result;
     }
 
     initHandler(name, options) {
