@@ -78,4 +78,28 @@ describe('LogBuilder', () => {
             });
         });
     });
+    describe('Configure logger verification', () => {
+        let logBuilder = new LogBuilder();
+        it('Should be defined', ()=> {
+            expect(logBuilder.configureLogger).toBeDefined();
+        });
+        it('Should return the promise', () => {
+            expect(logBuilder.configureLogger()).toEqual(jasmine.any(Promise));
+        });
+        it('Should load handlers by name using the system js', (done) => {
+            logBuilder.configureLogger('test', {
+                    handlers: [
+                        'console'
+                    ]
+                },
+                {
+                    handlers: {
+                        console: './handler/console'
+                    }
+                }).then(()=> {
+                    done();
+                }
+            );
+        });
+    });
 });

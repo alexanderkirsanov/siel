@@ -42,9 +42,9 @@ class LogBuilder {
 
     }
 
-    configureLogger(name, loggerOptions, options) {
+    configureLogger(name, loggerOptions = {}, options = {}) {
         let logger = Logger.createLogger(name);
-        if (loggerOptions.level !== null) {
+        if (loggerOptions.level) {
             logger.setLevel(loggerOptions.level);
         }
         const self = this;
@@ -73,7 +73,7 @@ class LogBuilder {
             }));
             Promise.all(promises).then(()=> {
                 resolve();
-            }).catch((err)=> {
+            }).catch((err = null)=> {
                 reject(err);
             });
         });
@@ -92,7 +92,14 @@ class LogBuilder {
     }
 
     configureHandler(handler, options) {
+        let HandlerClass = handler['class'];
+        if (typeof HandlerClass === 'string') {
+            HandlerClass = System.import(HandlerClass).then(function(){
 
+            });
+        }
+        delete handler['class'];
+        return hndlr;
     }
 }
 export default LogBuilder;
