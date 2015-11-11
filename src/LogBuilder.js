@@ -14,7 +14,7 @@ class LogBuilder {
         return Promise.all(result);
     }
 
-    processOption(optionConfig = {}, func, baseOptions) {
+    processOption(optionConfig = {}, func = null, baseOptions = null) {
         let keys = Object.keys(optionConfig);
         let promises = keys.map((key) => {
             return func.call(this, optionConfig[key], baseOptions);
@@ -93,13 +93,18 @@ class LogBuilder {
 
     configureHandler(handler, options) {
         let HandlerClass = handler['class'];
-        if (typeof HandlerClass === 'string') {
-            HandlerClass = System.import(HandlerClass).then(function(){
-
-            });
-        }
         delete handler['class'];
-        return hndlr;
+        if (typeof HandlerClass === 'string') {
+            return System.import(HandlerClass).then((cls)=>{
+                return new Promise((resolve)=> {
+                    resolve(cls);
+                })
+            });
+        }else{
+            return new Promise((resolve) => {
+                resolve(HandlerClass);
+            })
+        }
     }
 }
 export default LogBuilder;
