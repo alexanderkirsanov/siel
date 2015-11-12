@@ -47,14 +47,28 @@ class LogBuilder {
         if (loggerOptions.level) {
             logger.setLevel(loggerOptions.level);
         }
-        const self = this;
         let result = new Promise((resolve, reject) => {
             let promises = [];
             if (loggerOptions.handlers) {
-                logger.getHandlers().add();
-                promises.push.apply(promises, Promise.all(loggerOptions.handlers.map((handlerName) => {
-                    return self.initHandler(handlerName, options);
-                })));
+                let promise = new Promise((resolve, reject)=>{
+                    let count = loggerOptions.handlers.length;
+                    loggerOptions.handlers.forEach((name)=>{
+                        let handler = options.handlers[name];
+                        if (!handler) {
+                            reject ('There is no handler with name: ' + name);
+                        }
+                        if (typeof handler.handle !== 'function') {
+                            this.configureHandler(handler, options).then((handler)=>{
+                                options.handlers[name] = handler;
+                                count--;
+                                if(count === 0){
+                                    resolve();
+                                }
+                            });
+                        }
+                    })
+                })
+                promises.push(promise)
             }
             promises.push(new Promise((resolveInner) => {
                 if (loggerOptions.filters) {
@@ -80,16 +94,6 @@ class LogBuilder {
         return result;
     }
 
-    initHandler(name, options) {
-        let handler = options.handlers[name];
-        if (!handler) {
-            throw new Error('There is no handler with name: ' + name);
-        }
-        if (typeof handler.handle !== 'function') {
-            handler = options.handlers[name] = this.configureHandler(handler, options);
-        }
-        return handler;
-    }
 
     configureHandler(handler, options) {
         let HandlerClass = handler['class'];
