@@ -20,11 +20,13 @@ class LogBuilder {
             return func.call(this, optionConfig[key], baseOptions);
         });
         return Promise.all(promises).then((result)=> {
-            result.forEach((item) => {
+            result.forEach((item = []) => {
                 Object.keys(item).forEach((key)=> {
                     optionConfig[key] = item[key];
                 });
             });
+        }).catch((error)=> {
+            console.log(error);
         });
     }
 
@@ -50,20 +52,23 @@ class LogBuilder {
         let result = new Promise((resolve, reject) => {
             let promises = [];
             if (loggerOptions.handlers) {
-                let promise = new Promise((resolve, reject)=>{
+                let promise = new Promise((resolve, reject)=> {
                     let count = loggerOptions.handlers.length;
-                    loggerOptions.handlers.forEach((name)=>{
+                    loggerOptions.handlers.forEach((name)=> {
                         let handler = options.handlers[name];
                         if (!handler) {
-                            reject ('There is no handler with name: ' + name);
+                            reject('There is no handler with name: ' + name);
                         }
                         if (typeof handler.handle !== 'function') {
-                            this.configureHandler(handler, options).then((handler)=>{
+                            this.configureHandler(handler, options).then((handler)=> {
                                 options.handlers[name] = handler;
+                                logger.getHandlers().add(new handler());
                                 count--;
-                                if(count === 0){
+                                if (count === 0) {
                                     resolve();
                                 }
+                            }).catch((error) => {
+                                reject(error);
                             });
                         }
                     })
@@ -99,12 +104,12 @@ class LogBuilder {
         let HandlerClass = handler['class'];
         delete handler['class'];
         if (typeof HandlerClass === 'string') {
-            return System.import(HandlerClass).then((cls)=>{
+            return System.import(HandlerClass).then((cls)=> {
                 return new Promise((resolve)=> {
                     resolve(cls);
                 })
             });
-        }else{
+        } else {
             return new Promise((resolve) => {
                 resolve(HandlerClass);
             })

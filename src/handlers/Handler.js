@@ -61,3 +61,4 @@ class Handler {
         return this;
     }
 }
+export default Handler;

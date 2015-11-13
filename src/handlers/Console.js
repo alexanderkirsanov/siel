@@ -31,3 +31,4 @@ class Console extends Handler {
         /*eslint-enable no-console*/
     }
 }
+export default Console;

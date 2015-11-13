@@ -94,7 +94,7 @@ describe('LogBuilder', () => {
                 },
                 {
                     handlers: {
-                        console: './handler/console'
+                        console: {'class': './base/src/handlers/Console.js'}
                     }
                 }).then(()=> {
                     done();
