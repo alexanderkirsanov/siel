@@ -61,8 +61,8 @@ class LogBuilder {
                         }
                         if (typeof handler.handle !== 'function') {
                             this.configureHandler(handler, options).then((handler)=> {
-                                options.handlers[name] = handler;
-                                logger.getHandlers().add(new handler());
+                                options.handlers[name] = handler.default ? handler.default : handler;
+                                logger.getHandlers().add(new options.handlers[name]());
                                 count--;
                                 if (count === 0) {
                                     resolve();
