@@ -80,6 +80,9 @@ describe('LogBuilder', () => {
         });
     });
     describe('Configure logger verification', () => {
+        beforeEach(()=> {
+            Logger.clearCaches();
+        });
         let logBuilder = new LogBuilder();
         it('Should be defined', ()=> {
             expect(logBuilder.configureLogger).toBeDefined();
@@ -100,6 +103,23 @@ describe('LogBuilder', () => {
                     }
                 }).then(()=> {
                     expect(Logger.createLogger('test').getHandlers().getAll().length).toBe(1);
+                    done();
+                }
+            );
+        });
+        it('Should use filters from config', (done) => {
+            logBuilder.configureLogger('test',
+                {
+                    filters: [
+                        'simple'
+                    ]
+                },
+                {
+                    filters: {
+                        simple: () => {return true;}
+                    }
+                }).then(()=> {
+                    expect(Logger.createLogger('test').getFilters().getAll().length).toBe(1);
                     done();
                 }
             );

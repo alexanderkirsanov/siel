@@ -78,7 +78,7 @@ class LogBuilder {
             promises.push(new Promise((resolveInner) => {
                 if (loggerOptions.filters) {
                     loggerOptions.filters.forEach((filter) => {
-                        if (!options[filter]) {
+                        if (!options.filters[filter]) {
                             throw new Error('There is no filter with name: ' + filter);
                         }
                         logger.getFilters().add(options.filters[filter]);
