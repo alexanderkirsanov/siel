@@ -26,7 +26,7 @@ class LogBuilder {
                 });
             });
         }).catch((error)=> {
-            console.log(error);
+            throw new Error(error);
         });
     }
 
@@ -44,36 +44,36 @@ class LogBuilder {
 
     }
 
-    configureLogger(name, loggerOptions = {}, options = {}) {
-        let logger = Logger.createLogger(name);
+    configureLogger(loggerName, loggerOptions = {}, options = {}) {
+        let logger = Logger.createLogger(loggerName);
         if (loggerOptions.level) {
             logger.setLevel(loggerOptions.level);
         }
         let result = new Promise((resolve, reject) => {
             let promises = [];
             if (loggerOptions.handlers) {
-                let promise = new Promise((resolve, reject)=> {
+                let promise = new Promise((iResolve, iReject)=> {
                     let count = loggerOptions.handlers.length;
                     loggerOptions.handlers.forEach((name)=> {
                         let handler = options.handlers[name];
                         if (!handler) {
-                            reject('There is no handler with name: ' + name);
+                            iReject('There is no handler with name: ' + name);
                         }
                         if (typeof handler.handle !== 'function') {
-                            this.configureHandler(handler, options).then((handler)=> {
-                                options.handlers[name] = handler.default ? handler.default : handler;
-                                logger.getHandlers().add(new options.handlers[name]());
-                                count--;
+                            this.configureHandler(handler, options).then((currentHandler)=> {
+                                options.handlers[name] = currentHandler.default ? currentHandler.default : currentHandler;
+                                logger.getHandlers().add(new options.handlers[name](options));
+                                count = count - 1;
                                 if (count === 0) {
-                                    resolve();
+                                    iResolve();
                                 }
                             }).catch((error) => {
-                                reject(error);
+                                iReject(error);
                             });
                         }
-                    })
+                    });
                 });
-                promises.push(promise)
+                promises.push(promise);
             }
             promises.push(new Promise((resolveInner) => {
                 if (loggerOptions.filters) {
@@ -100,20 +100,22 @@ class LogBuilder {
     }
 
 
-    configureHandler(handler, options) {
-        let HandlerClass = handler['class'];
-        delete handler['class'];
+    configureHandler(handler) {
+        let HandlerClass = handler.class;
+        let result;
+        delete handler.class;
         if (typeof HandlerClass === 'string') {
-            return System.import(HandlerClass).then((cls)=> {
+            result = System.import(HandlerClass).then((cls)=> {
                 return new Promise((resolve)=> {
                     resolve(cls);
-                })
+                });
             });
         } else {
-            return new Promise((resolve) => {
+            result = new Promise((resolve) => {
                 resolve(HandlerClass);
-            })
+            });
         }
+        return result;
     }
 }
 export default LogBuilder;

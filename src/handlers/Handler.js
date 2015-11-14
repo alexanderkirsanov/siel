@@ -1,4 +1,5 @@
 import Levels from '../Levels.js';
+import Filters from '../filters/Filters.js';
 
 class Handler {
     static add(item) {
@@ -12,8 +13,9 @@ class Handler {
         Handler.all = [];
     }
 
-    constructor(options) {
-        if (typeof  options !== 'object') {
+    constructor(anOptions) {
+        let options = anOptions;
+        if (typeof options !== 'object') {
             options = {level: options};
         }
         let level = options.level ? Levels.getLevel(options.level) : Levels.Level.NO;
@@ -23,7 +25,6 @@ class Handler {
         } else if (options.format) {
             this.setFormatter(new DefaultFormatter(options.format));
         }
-
     }
 
     getFilters() {

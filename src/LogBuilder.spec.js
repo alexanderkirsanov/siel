@@ -88,14 +88,15 @@ describe('LogBuilder', () => {
             expect(logBuilder.configureLogger()).toEqual(jasmine.any(Promise));
         });
         it('Should load handlers by name using the system js', (done) => {
-            logBuilder.configureLogger('test', {
+            logBuilder.configureLogger('test',
+                {
                     handlers: [
                         'console'
                     ]
                 },
                 {
                     handlers: {
-                        console: {'class': './base/src/handlers/Console.js'}
+                        console: {class: './base/src/handlers/Console.js'}
                     }
                 }).then(()=> {
                     expect(Logger.createLogger('test').getHandlers().getAll().length).toBe(1);
