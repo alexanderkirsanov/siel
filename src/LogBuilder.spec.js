@@ -1,4 +1,5 @@
 import LogBuilder from './LogBuilder.js';
+import Logger from './Logger.js';
 describe('LogBuilder', () => {
     let testConfig = {
         formatters: {
@@ -97,6 +98,7 @@ describe('LogBuilder', () => {
                         console: {'class': './base/src/handlers/Console.js'}
                     }
                 }).then(()=> {
+                    expect(Logger.createLogger('test').getHandlers().getAll().length).toBe(1);
                     done();
                 }
             );

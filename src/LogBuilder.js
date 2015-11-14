@@ -72,7 +72,7 @@ class LogBuilder {
                             });
                         }
                     })
-                })
+                });
                 promises.push(promise)
             }
             promises.push(new Promise((resolveInner) => {
