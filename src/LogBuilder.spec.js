@@ -107,6 +107,49 @@ describe('LogBuilder', () => {
                 }
             );
         });
+        it('Should load handlers object', (done) => {
+            logBuilder.configureLogger('test',
+                {
+                    handlers: [
+                        'console'
+                    ]
+                },
+                {
+                    handlers: {
+                        console: {class:function test(){}}
+                    }
+                }).then(()=> {
+                    expect(Logger.createLogger('test').getHandlers().getAll().length).toBe(1);
+                    done();
+                }
+            );
+        });
+        it('Should invoke the error in case of non existing handler', (done) => {
+            logBuilder.configureLogger('test',
+                {
+                    handlers: [
+                        'console'
+                    ]
+                },
+                {}).catch((error)=> {
+                    expect(error).toEqual('There is no handler with name: console');
+                    done();
+                }
+            );
+        });
+        it('Should invoke the error in case of non existing filter', (done) => {
+            logBuilder.configureLogger('test',
+                {
+                    filters: [
+                        'simple'
+                    ]
+                },
+                {}).catch((error)=> {
+                    expect(error).toEqual('There is no filter with name: simple');
+                    done();
+                }
+            );
+        });
         it('Should use filters from config', (done) => {
             logBuilder.configureLogger('test',
                 {

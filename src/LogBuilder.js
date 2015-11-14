@@ -54,6 +54,7 @@ class LogBuilder {
             if (loggerOptions.handlers) {
                 let promise = new Promise((iResolve, iReject)=> {
                     let count = loggerOptions.handlers.length;
+                    options.handlers = options.handlers || {};
                     loggerOptions.handlers.forEach((name)=> {
                         let handler = options.handlers[name];
                         if (!handler) {
@@ -75,11 +76,12 @@ class LogBuilder {
                 });
                 promises.push(promise);
             }
-            promises.push(new Promise((resolveInner) => {
+            promises.push(new Promise((resolveInner, rejectInner) => {
                 if (loggerOptions.filters) {
+                    options.filters = options.filters || {};
                     loggerOptions.filters.forEach((filter) => {
                         if (!options.filters[filter]) {
-                            throw new Error('There is no filter with name: ' + filter);
+                            rejectInner('There is no filter with name: ' + filter);
                         }
                         logger.getFilters().add(options.filters[filter]);
                     });
@@ -92,7 +94,7 @@ class LogBuilder {
             }));
             Promise.all(promises).then(()=> {
                 resolve();
-            }).catch((err = null)=> {
+            }).catch((err)=> {
                 reject(err);
             });
         });
