@@ -1,4 +1,6 @@
 import Logger from './Logger.js';
+import Formatter from './Formatter.js';
+
 class LogBuilder {
 
     config(options) {
@@ -36,12 +38,20 @@ class LogBuilder {
         }
     }
 
-    configureFilters() {
+    configureFilters(filters, options) {
+        for (let filter of filters) {
+            this.configureFilter(filter, filters, options);
+        }
+    }
+
+    configureFilter(filterName, filterOptions = {}, options = {}) {
 
     }
 
-    configureFormatters() {
-
+    configureFormatters(formatters) {
+        for (let formatter of formatters) {
+            formatters[formatter] = new Formatter(formatters[formatter]);
+        }
     }
 
     configureLogger(loggerName, loggerOptions = {}, options = {}) {
