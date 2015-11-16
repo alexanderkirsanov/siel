@@ -39,13 +39,23 @@ class LogBuilder {
     }
 
     configureFilters(filters, options) {
-        for (let filter of filters) {
-            this.configureFilter(filter, filters, options);
-        }
-    }
-
-    configureFilter(filterName, filterOptions = {}, options = {}) {
-
+        let result = new Promise((resolve, reject) => {
+            let filterNames = Object.keys(filters);
+            let count = filterNames.length;
+            filterNames.forEach((name)=> {
+                let filter = filters[name];
+                if (typeof filter.class === 'string') {
+                    result = System.import(filter.class).then((cls)=> {
+                        count = count - 1;
+                        //todo implement create new instance
+                    });
+                } else {
+                    count = count - 1;
+                    //todo implement create new instance
+                }
+            });
+        });
+        return result;
     }
 
     configureFormatters(formatters) {
