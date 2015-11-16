@@ -1,5 +1,6 @@
 import Logger from './Logger.js';
 import Formatter from './Formatter.js';
+import Filter from './filters/Filters.js';
 
 class LogBuilder {
 
@@ -38,7 +39,7 @@ class LogBuilder {
         }
     }
 
-    configureFilters(filters, options) {
+    configureFilters(filters) {
         let result = new Promise((resolve, reject) => {
             let filterNames = Object.keys(filters);
             let count = filterNames.length;
@@ -47,11 +48,19 @@ class LogBuilder {
                 if (typeof filter.class === 'string') {
                     result = System.import(filter.class).then((cls)=> {
                         count = count - 1;
-                        //todo implement create new instance
+                        filters[name] =  cls.default ? new cls.default : new cls;
+                        if (count === 0){
+                            resolve();
+                        }
+                    }).catch((err) => {
+                        reject(err);
                     });
                 } else {
                     count = count - 1;
-                    //todo implement create new instance
+                    filters[name] =  new Filter(filter);
+                    if (count === 0){
+                        resolve();
+                    }
                 }
             });
         });
