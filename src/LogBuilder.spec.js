@@ -116,7 +116,10 @@ describe('LogBuilder', () => {
                 },
                 {
                     handlers: {
-                        console: {class:function test(){}}
+                        console: {
+                            class: function test() {
+                            }
+                        }
                     }
                 }).then(()=> {
                     expect(Logger.createLogger('test').getHandlers().getAll().length).toBe(1);
@@ -124,7 +127,7 @@ describe('LogBuilder', () => {
                 }
             );
         });
-        it('Should invoke the error in case of non existing handler', (done) => {
+        it('Should throw the error in case of non existing handler', (done) => {
             logBuilder.configureLogger('test',
                 {
                     handlers: [
@@ -137,6 +140,24 @@ describe('LogBuilder', () => {
                 }
             );
         });
+        it('Should throw the error in case of file with handler definition is not exists', (done) => {
+            logBuilder.configureLogger('test',
+                {
+                    handlers: [
+                        'console'
+                    ]
+                },
+                {
+                    handlers: {
+                        console: {class: './base/src/handlers/Console111.js'}
+                    }
+                }).catch((error)=> {
+                    expect(error).toEqual(jasmine.any(Error));
+                    done();
+                }
+            );
+        });
+
         it('Should invoke the error in case of non existing filter', (done) => {
             logBuilder.configureLogger('test',
                 {
@@ -150,6 +171,51 @@ describe('LogBuilder', () => {
                 }
             );
         });
+        it('Should support multiple handlers load', (done) => {
+            logBuilder.configureLogger('test',
+                {
+                    handlers: [
+                        'console', 'simple'
+                    ]
+                },
+                {
+                    handlers: {
+                        console: {class: './base/src/handlers/Console.js'},
+                        simple: {
+                            class: function test() {
+                            }
+                        }
+                    }
+                }).then(()=> {
+                    expect(Logger.createLogger('test').getHandlers().getAll().length).toBe(2);
+                    done();
+                }
+            );
+        });
+
+        it('Should support special options', (done) => {
+            logBuilder.configureLogger('test',
+                {
+                    level: 100,
+                    propagate: false
+                },
+                {}).then(()=> {
+                    let logger = Logger.createLogger('test');
+                    expect(logger.isPropagate()).toBe(false);
+                    expect(logger.getSuitableLevel()).toBe(100);
+                    done();
+                }
+            );
+            logBuilder.configureLogger('test',
+                {
+                },
+                {}).then(()=> {
+                    let logger = Logger.createLogger('test');
+                    expect(logger.isPropagate()).toBe(true);
+                    done();
+                }
+            );
+        });
         it('Should use filters from config', (done) => {
             logBuilder.configureLogger('test',
                 {
@@ -159,7 +225,9 @@ describe('LogBuilder', () => {
                 },
                 {
                     filters: {
-                        simple: () => {return true;}
+                        simple: () => {
+                            return true;
+                        }
                     }
                 }).then(()=> {
                     expect(Logger.createLogger('test').getFilters().getAll().length).toBe(1);

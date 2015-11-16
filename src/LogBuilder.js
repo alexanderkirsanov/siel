@@ -116,7 +116,7 @@ class LogBuilder {
                     });
                 }
 
-                if (loggerOptions.propagate !== null) {
+                if (loggerOptions.propagate !== null && loggerOptions.propagate !== undefined) {
                     logger.propagate = loggerOptions.propagate;
                 }
                 resolveInner();
