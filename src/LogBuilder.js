@@ -92,7 +92,8 @@ class LogBuilder {
                         if (typeof handler.handle !== 'function') {
                             this.configureHandler(handler, options).then((currentHandler)=> {
                                 options.handlers[name] = currentHandler.default ? currentHandler.default : currentHandler;
-                                logger.getHandlers().add(new options.handlers[name](options));
+                                options.handlers[name] = new options.handlers[name](options);
+                                logger.getHandlers().add(options.handlers[name]);
                                 count = count - 1;
                                 if (count === 0) {
                                     iResolve();
@@ -100,6 +101,11 @@ class LogBuilder {
                             }).catch((error) => {
                                 iReject(error);
                             });
+                        } else {
+                            count = count - 1;
+                            if (count === 0) {
+                                iResolve();
+                            }
                         }
                     });
                 });

@@ -193,6 +193,33 @@ describe('LogBuilder', () => {
             );
         });
 
+        it('Shouldn\'t init handler twice', (done) => {
+            let options = {
+                handlers: {
+                    console: {class: './base/src/handlers/Console.js'}
+                }
+            }
+            logBuilder.configureLogger('test',
+                {
+                    handlers: [
+                        'console'
+                    ]
+                },
+                options).then(()=> {
+                    expect(options.handlers.console.handle).not.toBeUndefined()
+                    logBuilder.configureLogger('test2',
+                        {
+                            handlers: [
+                                'console'
+                            ]
+                        },
+                        options).then(()=> {
+                        done();
+                    });
+                }
+            );
+        });
+
         it('Should support special options', (done) => {
             logBuilder.configureLogger('test',
                 {
@@ -207,8 +234,7 @@ describe('LogBuilder', () => {
                 }
             );
             logBuilder.configureLogger('test',
-                {
-                },
+                {},
                 {}).then(()=> {
                     let logger = Logger.createLogger('test');
                     expect(logger.isPropagate()).toBe(true);
