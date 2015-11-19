@@ -12,7 +12,7 @@ class Formatter {
                 this.format = options;
             }
         }
-        Formatter.compileFormat(format);
+        this.compiledFormat  =Formatter.compileFormat(format);
     }
 
     format(record) {
@@ -20,7 +20,7 @@ class Formatter {
             formatted = util.format.apply(util, record.args);
 
         record.message = formatted;
-        formatted = this._compiledFormat(record);
+        formatted = this.compiledFormat(record);
 
         record.message = message;
         return formatted;
