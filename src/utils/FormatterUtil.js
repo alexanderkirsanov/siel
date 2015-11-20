@@ -4,13 +4,13 @@ class FormatterUtil{
             if (typeof f !== 'string') {
                 var objects = [];
 
-                for (var i = 0; i < arguments.length; i++) {
+                for (let i = 0; i < arguments.length; i++) {
                     objects.push(inspect(arguments[i]));
                 }
                 return objects.join(' ');
             }
 
-            var i = 1;
+            let i = 1;
             var args = arguments;
             var len = args.length;
             var str = String(f).replace(formatRegExp, function(x) {
