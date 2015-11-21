@@ -9,9 +9,9 @@ class FormatterUtil {
             }
             return objects.join(' ');
         }
-        let i = 1;
+        let i = 0;
         let len = params.length;
-        let str = String(pattern).replace(formatRegExp, function (x) {
+        let str = String(pattern).replace(formatRegExp, x=> {
             if (x === '%%') {
                 return '%';
             }
@@ -29,14 +29,14 @@ class FormatterUtil {
                     } catch (_) {
                         return '[Circular]';
                     }
-                default:
-                    return x;
             }
         });
-
+        i = i + 1;
         for (let x = arguments[i]; i < len + 1; x = arguments[++i]) {
             if (x === null || typeof x !== 'object') {
                 str += ' ' + x;
+            } else {
+                str += ' ' + JSON.stringify(x);
             }
         }
         return str;
