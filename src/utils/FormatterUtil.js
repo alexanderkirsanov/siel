@@ -1,7 +1,14 @@
 class FormatterUtil {
+
     static format(pattern, ...params) {
         let formatRegExp = /%[sdj%]/g;
-
+        if (typeof pattern !== 'string') {
+            let objects = [];
+            for (let i = 0; i < arguments.length; i++) {
+                objects.push(JSON.stringify(arguments[i]));
+            }
+            return objects.join(' ');
+        }
         let i = 1;
         let len = params.length;
         let str = String(pattern).replace(formatRegExp, function (x) {
@@ -26,7 +33,8 @@ class FormatterUtil {
                     return x;
             }
         });
-        for (let x = params[i]; i < len; x = args[++i]) {
+
+        for (let x = arguments[i]; i < len + 1; x = arguments[++i]) {
             if (x === null || typeof x !== 'object') {
                 str += ' ' + x;
             }
@@ -34,3 +42,4 @@ class FormatterUtil {
         return str;
     }
 }
+export default FormatterUtil;
