@@ -48,8 +48,9 @@ class LogBuilder {
                 if (typeof filter.class === 'string') {
                     result = System.import(filter.class).then((cls)=> {
                         count = count - 1;
-                        filters[name] =  cls.default ? new cls.default : new cls;
-                        if (count === 0){
+                        let FilterName = cls.default ? cls.default : cls;
+                        filters[name] = new FilterName();
+                        if (count === 0) {
                             resolve();
                         }
                     }).catch((err) => {
@@ -57,8 +58,8 @@ class LogBuilder {
                     });
                 } else {
                     count = count - 1;
-                    filters[name] =  new Filter(filter);
-                    if (count === 0){
+                    filters[name] = new Filter(filter);
+                    if (count === 0) {
                         resolve();
                     }
                 }
@@ -122,7 +123,7 @@ class LogBuilder {
                     });
                 }
 
-                if (loggerOptions.propagate !== null && loggerOptions.propagate !== undefined) {
+                if (loggerOptions.propagate !== null && typeof loggerOptions.propagate !== 'undefined') {
                     logger.propagate = loggerOptions.propagate;
                 }
                 resolveInner();

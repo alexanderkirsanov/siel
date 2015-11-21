@@ -198,7 +198,7 @@ describe('LogBuilder', () => {
                 handlers: {
                     console: {class: './base/src/handlers/Console.js'}
                 }
-            }
+            };
             logBuilder.configureLogger('test',
                 {
                     handlers: [
@@ -206,7 +206,7 @@ describe('LogBuilder', () => {
                     ]
                 },
                 options).then(()=> {
-                    expect(options.handlers.console.handle).not.toBeUndefined()
+                    expect(options.handlers.console.handle).not.toBeUndefined();
                     logBuilder.configureLogger('test2',
                         {
                             handlers: [
@@ -214,8 +214,8 @@ describe('LogBuilder', () => {
                             ]
                         },
                         options).then(()=> {
-                        done();
-                    });
+                            done();
+                        });
                 }
             );
         });
