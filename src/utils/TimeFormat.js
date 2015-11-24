@@ -295,7 +295,7 @@ export default function compileFormatter(format) {
 
     // frame code as the function body
     source = 'function(d) {\n' +
-        "var " + argumentKeys.map(function(a) {
+        "var " + argumentKeys.map(a => {
             return '__' + a + ' = ' + a;
         }).join(', ') + ", __d, __p = '';\n" +
         source +
